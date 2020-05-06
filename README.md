@@ -1,4 +1,4 @@
-# Expo Native Web WITH redux
+# Expo Native Web With Redux
 
 I am going to build a sample expo app which can run on ios and android devices as well as web.
 
