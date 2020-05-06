@@ -1,6 +1,6 @@
 # Expo Native Web WITH redux
 
-I am going to build a sample expo app who can run on ios and android devices as well as web.
+I am going to build a sample expo app which can run on ios and android devices as well as web.
 
 Todos:
 1. Refresh react native basics (It was 1-2 years ago since I used react native last time).
