@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React from "react";
+import { Provider as PaperProvider } from 'react-native-paper';
+import theme from './theme';
+import Routes from './components/Routes';
+import { Provider as ReduxProvider } from 'react-redux';
+import store from './store';
 
 export default function App() {
-  const [ outputText, setOutputText ] = useState('Change text');
   return (
-    <View style={styles.container}>
-      <Text>Hello, world!</Text>
-      <Button
-        title={outputText}
-        onPress={() => setOutputText('You pressed!')}
-      />
-    </View>
+    <ReduxProvider store={store} >
+      <PaperProvider theme={theme}>
+        <Routes />
+      </PaperProvider>
+    </ReduxProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

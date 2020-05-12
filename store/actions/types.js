@@ -1,0 +1,8 @@
+export const GET_ALL_CATEGORIES = 'GET_ALL_CATEGORIES';
+export const GET_TOPLEVEL_CATEGORIES = 'GET_TOPLEVEL_CATEGORIES';
+export const SIGN_UP = 'SIGN_UP';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const ADD_NEW_CATEGORY = 'ADD_NEW_CATEGORY';
+export const EDIT_CATEGORY = 'EDIT_CATEGORY';
+export const SELECT_CATEGORY = 'SELECT_CATEGORY';
