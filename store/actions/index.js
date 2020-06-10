@@ -14,8 +14,10 @@ export const signUp = ({ username, email, password }) => {
         body: raw
       };
 
+      const uri = `${API_URL}/signup`;
+
       const response = await fetch(
-        `${API_URL}/signup`,
+        uri,
         requestOptions
       );
 
@@ -54,8 +56,10 @@ export const login = ({ username, password }) => {
         body: raw
       };
 
+      const uri = `${API_URL}/signin`;
+
       const response = await fetch(
-        `${API_URL}/signin`,
+        uri,
         requestOptions
       );
 
@@ -81,27 +85,30 @@ export const login = ({ username, password }) => {
   };
 };
 
-export const logout = () => {
-  return (dispatch) => {
-    dispatch({
-      type: TYPES.LOGOUT
-    });
+export const setFitbitAccessToken = (fitbitAccessToken) => {
+  return {
+    type: TYPES.SET_FITBIT_ACCESS_TOKEN,
+    fitbitAccessToken
   }
 };
 
-export const getAllCategories = () => {
-
+export const getFitbitDailyActivitySummary = (specifiedDateStr) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
+    const fitbitAccessToken = getState().fitbit.fitbitAccessToken;
+    const today = new Date();
+    const dateStr = specifiedDateStr ? specifiedDateStr : `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+
+    const uri = `https://api.fitbit.com/1/user/-/activities/date/${dateStr}.json`;
 
     try {
       const response = await fetch(
-        `${API_URL}/categories`,
+        uri,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `bearer ${token}`
+            'Authorization': `Bearer ${fitbitAccessToken}`
           }
         }
       );
@@ -117,47 +124,10 @@ export const getAllCategories = () => {
       }
 
       dispatch({
-        type: TYPES.GET_ALL_CATEGORIES,
-        allCategories: resData
-      });
-    } catch (err) {
-      if (err.message === "Unauthorized") {
-        logout();
-      }
-    }
-  };
-};
-
-export const getToplevelCategories = () => {
-
-  return async (dispatch, getState) => {
-    const token = getState().auth.token;
-
-    try {
-      const response = await fetch(
-        `${API_URL}/categories/toplevel`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${token}`
-          }
+        type: TYPES.GET_FITBIT_DAILY_ACTIVITY_SUMMARY,
+        dailyActivitySummary: {
+          [dateStr]: resData
         }
-      );
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const resData = await response.json();
-
-      if (resData.error || resData.errors && resData.errors.length > 0) {
-        throw new Error("Something went wrong.");
-      }
-
-      dispatch({
-        type: TYPES.GET_TOPLEVEL_CATEGORIES,
-        categories: resData
       });
     } catch (err) {
       if (err.message === "Unauthorized") {
@@ -165,125 +135,10 @@ export const getToplevelCategories = () => {
       }
     }
   };
-};
+}
 
-export const getCategory = ({ id }) => {
-
-  return async (dispatch, getState) => {
-    const token = getState().auth.token;
-
-    try {
-      const response = await fetch(
-        `${API_URL}/categories/${id}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${token}`
-          }
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const resData = await response.json();
-
-      if (resData.error || resData.errors && resData.errors.length > 0) {
-        throw new Error("Something went wrong.");
-      }
-
-      dispatch({
-        type: TYPES.SELECT_CATEGORY,
-        selectedCategory: resData
-      });
-    } catch (err) {
-      if (err.message === "Unauthorized") {
-        logout();
-      }
-    }
-  };
-};
-
-export const addNewCategory = ({ label, parent_cat_id }) => {
-  return async (dispatch, getState) => {
-    const token = getState().auth.token;
-
-    try {
-      const raw = JSON.stringify({ label, parent_cat_id });
-
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `bearer ${token}`
-        },
-        body: raw
-      };
-
-      const response = await fetch(
-        `${API_URL}/categories`,
-        requestOptions
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong.");
-      }
-
-      const resData = await response.json();
-
-      if (resData.error || resData.errors && resData.errors.length > 0) {
-        throw new Error("Something went wrong.");
-      }
-
-      dispatch({
-        type: TYPES.ADD_NEW_CATEGORY,
-        category: resData
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
-};
-
-export const editCategory = ({ id, label, parent_cat_id }) => {
-  return async (dispatch, getState) => {
-    const token = getState().auth.token;
-
-    try {
-      const raw = JSON.stringify({ id, label, parent_cat_id });
-
-      const requestOptions = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `bearer ${token}`
-        },
-        body: raw
-      };
-
-      const response = await fetch(
-        `${API_URL}/categories`,
-        requestOptions
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong.");
-      }
-
-      const resData = await response.json();
-
-      if (resData.error || resData.errors && resData.errors.length > 0) {
-        throw new Error("Something went wrong.");
-      }
-
-      dispatch({
-        type: TYPES.EDIT_CATEGORY,
-        category: resData
-      });
-    } catch (err) {
-      throw err;
-    }
+export const logout = () => {
+  return {
+    type: TYPES.LOGOUT
   };
 };

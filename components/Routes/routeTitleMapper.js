@@ -15,16 +15,10 @@ const routeTitleMapper = (pathname) => {
       return { title: 'Log In', name: 'login', routeType: 'publicOnly' };
     case '/signup':
       return { title: 'Sign Up', name: 'signup', routeType: 'publicOnly' };
-    case '/categories':
-      return { title: 'Categories', name: 'categories', routeType: 'private' };
-    case '/category':
-      return { title: 'Category', name: 'category', routeType: 'private' };
-    case '/category/new':
-      return { title: 'Add New Category', name: 'categoryNew', routeType: 'private' };
-    case '/category/edit':
-      return { title: 'Edit Category', name: 'categoryEdit', routeType: 'private' };
+    case '/dashboard':
+      return { title: 'Dashboard', name: 'dashboard', routeType: 'private' };
     default:
-      return { title: 'Categories', name: 'categories', routeType: 'private' };
+      return { title: 'Dashboard', name: 'dashboard', routeType: 'private' };
   }
 };
 

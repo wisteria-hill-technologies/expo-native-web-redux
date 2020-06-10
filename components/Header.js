@@ -8,6 +8,7 @@ import routeTitleMapper from "./Routes/routeTitleMapper";
 const Header = () => {
   const history = useHistory();
   const { title, name, routeType } = routeTitleMapper(history.location.pathname);
+
   return (
     <Appbar.Header style={styles.header}>
       <HeaderTitle>{title}</HeaderTitle>

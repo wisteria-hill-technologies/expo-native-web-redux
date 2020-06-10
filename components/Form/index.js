@@ -10,8 +10,7 @@ import { FORM_UPDATE, FORM_RESET } from './actionTypes';
 import formReducer from './formReducer';
 import { useHistory } from '../../Router';
 
-
-const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alternativeBtn, successMessage, returnPathOnSuccess, failureMessage }) => {
+const Form = ({ id, inputsArr, initialFormState, fieldsValidationOptions, confirmBtn, alternativeBtn, successMessage, failureMessage, speak, successCallback }) => {
   const history = useHistory();
   const [ validateForm, setValidateForm ] = useState(false);
   const defaultFormStatus = { hasError: false, message: '' };
@@ -22,13 +21,25 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
   const [formState, dispatchFormAction] = useReducer(formReducer, initialFormState);
 
   useEffect(() => {
-    setValidateForm(false);
-    setFormStatus(defaultFormStatus);
-    dispatchFormAction({ type: FORM_RESET, initialFormState });
+    let mounted = true;
+    if (mounted) {
+      setValidateForm(false);
+      setFormStatus(defaultFormStatus);
+      dispatchFormAction({ type: FORM_RESET, initialFormState });
+    }
+    return () => mounted = false;
   }, [initialFormState]);
 
-  const textChangeHandler = (text, name) => {
-    let validityStatus = checkError(text, name);
+  const textChangeHandler = (text, name, type) => {
+    let validityStatus = checkError(text, name, type, fieldsValidationOptions[name]);
+    dispatchFormAction({ type: FORM_UPDATE, name, value: text, validityStatus: {
+      isValid: true,
+        message: ''
+    }});
+  };
+
+  const onBlurHandler = (text, name, type) => {
+    let validityStatus = checkError(text, name, type, fieldsValidationOptions[name]);
     dispatchFormAction({ type: FORM_UPDATE, name, value: text, validityStatus });
   };
 
@@ -40,7 +51,6 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
       setLoading(true);
       setFormStatus({ hasError: false, message: successMessage });
       try {
-
         const dispatchParams = inputsArr.reduce((acc, inputObj) => {
           return { ...acc, [inputObj.name]: formState.inputValues[inputObj.name] || null };
         }, {});
@@ -48,12 +58,9 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
         if (id) {
           dispatchParams.id =id;
         }
-        await dispatch(confirmBtn.actionCreator(dispatchParams));
+        dispatch(confirmBtn.actionCreator(dispatchParams));
         setLoading(false);
-        setTimeout(() => {
-          const returnPath = returnPathOnSuccess || '/';
-          history.push(returnPath);
-        }, 1000);
+        successCallback && successCallback();
       } catch (err) {
         setLoading(false);
         setFormStatus({ hasError: true, message: failureMessage });
@@ -80,7 +87,7 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
                   key={name}
                   selectedValue={formState.inputValues[name] || ''}
                   style={{ margin: 10, height: 64 }}
-                  onValueChange={(itemValue, itemIndex) => textChangeHandler(itemValue, name)}
+                  onValueChange={(itemValue) => textChangeHandler(itemValue, name, type)}
                 >
                   {
                     pickerList && pickerList.map(({ name, label, cat_id }) => (
@@ -92,11 +99,13 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
             } else {
               return (
                 <TextInput
+                  speak={speak}
                   key={name}
                   name={name}
                   label={label}
                   value={formState.inputValues[name] || ''}
-                  onChangeText={text => textChangeHandler(text, name)}
+                  onChangeText={text => textChangeHandler(text, name, type)}
+                  onBlur={text => onBlurHandler(text, name, type)}
                   validity={formState.inputValidities[name]}
                   validate={validateForm}
                   autoCapitalize="none"
@@ -110,6 +119,7 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
         {
           !!formStatus.message && (
             <MessageBox
+              speak={speak}
               style={{ flex: 1 }}
               state={formStatus.hasError ? "danger" : "success"}
               message={formStatus.message}
@@ -119,12 +129,21 @@ const Form = ({ id, inputsArr, initialFormState, pathname, name, confirmBtn, alt
 
       </View>
       <View style={{ flex: 1 }}>
-        <Button icon="login-variant" mode="contained" onPress={handleSubmit}>
+        <Button
+          icon="login-variant"
+          mode="contained"
+          onPress={handleSubmit}
+          accesibilityLabel={confirmBtn.title}
+        >
           {confirmBtn.title}
         </Button>
         {
           alternativeBtn && alternativeBtn.title && (
-            <Button mode="text" onPress={() => history.push(alternativeBtn.link)}>
+            <Button
+              mode="outlined"
+              onPress={() => history.push(alternativeBtn.link)}
+              accesibilityLabel={alternativeBtn.title}
+            >
               {alternativeBtn.title}
             </Button>
           )

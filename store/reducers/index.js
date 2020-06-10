@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import categoriesReducer from './categories';
-import authReducer from "./auth";
+import fitbitReducer from './fitbit';
+import authReducer from './auth';
 
 const rootReducer = combineReducers({
-  categories: categoriesReducer,
+  fitbit: fitbitReducer,
   auth: authReducer
 });
 
