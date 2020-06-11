@@ -41,7 +41,6 @@ const Auth = ({ history }) => {
 
   return (
     <KeyboardAvoidingView
-      // behavior="padding"
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollView}>

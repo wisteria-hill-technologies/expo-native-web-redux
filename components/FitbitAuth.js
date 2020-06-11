@@ -4,7 +4,6 @@ import { makeRedirectUri, useAuthRequest, Prompt } from 'expo-auth-session';
 import { Platform, Text, View, StyleSheet } from 'react-native';
 import Button from './Button';
 import { API_URL, REDIRECT_URI } from 'react-native-dotenv';
-import * as Speech from 'expo-speech';
 import {useSelector, useDispatch } from "react-redux";
 import { setFitbitAccessToken } from "../store/actions";
 
@@ -21,13 +20,10 @@ const FitbitAuth = () => {
   const dispatch = useDispatch();
   const { token } = useSelector(state => state.auth) || {};
 
-  useEffect(() => {
-    Speech.speak('Would you like to access Fitbit?  We will collect your anonymized data for medical research purpose.')
-  }, []);
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: '22BMHR',
-      scopes: ['activity', 'sleep', 'profile'],
+      scopes: ['activity', 'sleep', 'heartrate'],
       // For usage in managed apps using the proxy
       redirectUri: REDIRECT_URI,
       prompt: Prompt.Consent

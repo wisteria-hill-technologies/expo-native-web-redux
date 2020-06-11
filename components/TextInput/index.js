@@ -8,7 +8,7 @@ import * as Speech from 'expo-speech';
 const TextInput = ({ name, label, value, onChangeText, onBlur, validity, validate, speak, ...props }) => {
   useEffect(() => {
     if(validate) {
-      onChangeText(value, name);
+      onBlur(value, name);
     }
   }, [validate]);
   const { isValid, message } = validity || {};

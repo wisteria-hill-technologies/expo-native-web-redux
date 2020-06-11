@@ -7,8 +7,8 @@ const makeSummaryVoice = (summary) => {
   const stepsStr = `${prefix} You walked ${steps} steps and ${floors} floors.   `;
   const fairlyActiveStr = fairlyActiveMinutes ? `You were fairly active for ${fairlyActiveTime}.   `: '';
   const veryActiveStr = veryActiveMinutes ? `You were very active ${veryActiveTime},  ` : '';
-  const activeStatus = (!fairlyActiveMinutes && !veryActiveStr) ? "You were not active at all.  " : (fairlyActiveStr+veryActiveStr);
-  const sedentaryStr = sedentaryMinutes ? `You did not move much for ${sedentaryTime}.  `: '';
+  const activeStatus = (!fairlyActiveMinutes && !veryActiveStr) ? "" : (fairlyActiveStr+veryActiveStr);
+  const sedentaryStr = sedentaryMinutes ? `You were inactive for ${sedentaryTime}.  `: '';
 
   return stepsStr + activeStatus + sedentaryStr;
 };
