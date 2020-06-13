@@ -1,10 +1,18 @@
 import { combineReducers } from 'redux';
-import categoriesReducer from './categories';
-import authReducer from "./auth";
+import fitbitReducer from './fitbit';
+import authReducer from './auth';
+import * as TYPES from '../actions/types';
 
-const rootReducer = combineReducers({
-  categories: categoriesReducer,
+const appReducer = combineReducers({
+  fitbit: fitbitReducer,
   auth: authReducer
 });
+
+const rootReducer = (state, action) => {
+  if(action.type === TYPES.LOGOUT) {
+    state = {}
+  }
+  return appReducer(state, action)
+}
 
 export default rootReducer;

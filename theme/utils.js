@@ -2,6 +2,10 @@ import theme from "./index";
 
 export const selectColor = (state) => {
   switch(state) {
+    case "primary":
+      return theme.colors.primary;
+    case "accent":
+      return theme.colors.accept;
     case "success":
       return theme.colors.success;
     case "warning":

@@ -7,7 +7,7 @@ const PublicOnlyRoute = (props) => {
   if (!authenticated) {
     return <Route { ...props } />;
   } else {
-    return <Redirect exact to="/categories" />;
+    return <Redirect exact to="/dashboard" />;
   }
 };
 
