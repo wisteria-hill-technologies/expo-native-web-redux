@@ -1,8 +1,8 @@
 import * as TYPES from '../actions/types';
 
 const initialState = {
-  authenticated: true,
-  token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE4LCJpYXQiOjE1ODkyNzY1NzYyNTcsImFkbWludHlwZSI6MCwidXNlcnR5cGUiOjF9.dTT05HodfmkVi7wMZATg9j_cUCcEpT45hR27Wooqy3Q'
+  authenticated: false,
+  token: ''
 };
 
 const authReducer = (state=initialState, action) => {
